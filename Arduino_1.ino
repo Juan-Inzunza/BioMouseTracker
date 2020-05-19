@@ -17,12 +17,12 @@ void loop()
      {
           if(sensordata_1 == LOW)        //  CAGE 1
           {
-            Serial.println(String(1));  // 
+            Serial.println("s1: 1");  // 
           }
-//          else
-//          {
-//            Serial.println(String(0));
-//          }
+          else
+          {
+            Serial.println("s1: 0");
+          }
           delay(200);
       
     }
@@ -30,12 +30,12 @@ void loop()
      {
           if(sensordata_2 == LOW)     //  CAGE 2
           {
-            Serial.println(String(1));
+            Serial.println("s2: 1");
           }
-//          else
-//          {
-//            Serial.println(String(0));
-//          }
+          else
+          {
+            Serial.println("s2: 0");
+          }
           delay(200);
           
     }
@@ -67,3 +67,4 @@ void loop()
 //    }
 //  
 }
+ 
