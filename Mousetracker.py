@@ -64,16 +64,16 @@ try:
         old_readings = []
         old_times = []
         present_readings, present_time = current_readings()
-        print()
         print("Multiplexer readings: ")
         print("----------------------")
         for i in range(16):
           print(i," = ", s0[i],s1[i],s2[i],s3[i],"Reading: ",present_readings[i], " at time: ", present_time[i])
-        time.sleep(5)
+        print("-----------------------")
+        time.sleep(1)
         old_readings = previous_readings(present_readings)
         old_times = previous_times(present_time)
+        print()
         print("Here are the previous readings: ", old_readings)
         print("Here are the previous times: ", old_times)
-        print("-----------------------")
 except KeyboardInterrupt:
     GPIO.cleanup()
