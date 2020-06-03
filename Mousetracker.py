@@ -49,13 +49,13 @@ def current_readings():
 
 def previous_readings(readings_list):
     old_readings.append(readings_list)
-    if len(old_readings) > 15:
+    if len(old_readings) > 5:
         old_readings.pop(0)
     return old_readings
 
 def previous_times(times_list):
     old_times.append(times_list)
-    if len(old_times) > 15:
+    if len(old_times) > 5:
         old_times.pop(0)
     return old_times
 
