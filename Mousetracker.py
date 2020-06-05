@@ -1,5 +1,16 @@
+#Program written by Juan Inzunza and Heidy Ramirez
+#As of right now this program logs all the data from the 16 cages through a
+#Multiplexer to a text file, with the results.
+
+#VERY IMPORTANT WHEN RUNNING THIS PROGRAM: IF YOU USE AN IDE TO RUN THE PROGRAM
+#MAKE SURE NOT TO USE THE BUILT IN STOP BUTTON TO HALT THE PROGRAM
+#INSTEAD YOU HAVE TO HIT CTRL-C TO EXIT THE PROGRAM. OTHERWISE
+#USING THE STOP BUTTON WILL EXIT THE PROGRAM AND ERASE ALL THE DATA AND RETURN
+#AN EMPTY TEXT FILE. 
+
 import RPi.GPIO as GPIO
 import time
+from datetime import date
 
 GPIO.setmode(GPIO.BOARD)
 GPIO.setwarnings(False)
@@ -59,21 +70,44 @@ def previous_times(times_list):
         old_times.pop(0)
     return old_times
 
+cage_totals = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
 try:
+    today = date.today()
+    today_now = str(today)
+    now = time.localtime()
+    time_now = time.strftime("%H:%M:%S", now)
+    results = open("MCRs"+today_now+"_"+time_now+".txt", "a")
+    results.write("Mouse Cage Reading results for: " + today_now + "(Year/Month/Day)\n")
+    results.write("This file displays and records information on mouse movement for cages who return a 1 (i.e. the mouse set off the sensor) on a predefined time interval (currently 5 seconds)\n")
+    results.write("Total mouse movements will be displayed as a running total at the end of this file for each cage\n")
+    results.write("Note this file only logs cage movements for cages with activity every 5 seconds\n")
     while True:
         old_readings = []
         old_times = []
         present_readings, present_time = current_readings()
+        results.write("\n")
+        results.write("Cage     Movement          Time\n")
         print("Multiplexer readings: ")
         print("----------------------")
         for i in range(16):
           print(i," = ", s0[i],s1[i],s2[i],s3[i],"Reading: ",present_readings[i], " at time: ", present_time[i])
+          cage_totals[i] = cage_totals[i] + present_readings[i]
+          if present_readings[i] == 1:
+              results.write(str(i+1) + "           " + str(present_readings[i]) + "            " + str(present_time[i])+"\n")
         print("-----------------------")
-        time.sleep(1)
+        results.write("\n")
+        time.sleep(5)
         old_readings = previous_readings(present_readings)
         old_times = previous_times(present_time)
         print()
         print("Here are the previous readings: ", old_readings)
         print("Here are the previous times: ", old_times)
 except KeyboardInterrupt:
+    results.write("\n")
+    results.write("Here are the cage totals for the run-time of this experiment:\n")
+    results.write("Cage     # of times moved\n")
+    for i in range(16):
+        results.write(str(i) + "            " + str(cage_totals[i])+"\n")
+    results.close()
     GPIO.cleanup()
