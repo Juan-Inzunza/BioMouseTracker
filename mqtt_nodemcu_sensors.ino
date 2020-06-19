@@ -1,7 +1,6 @@
 #include <PubSubClient.h>
 
 #include <Wire.h>
-
 #include <ESP8266WiFi.h>
 #include <Ticker.h>
 #include <AsyncMqttClient.h>
@@ -11,8 +10,6 @@
 
 // Raspberri Pi Mosquitto MQTT Broker
 #define MQTT_HOST IPAddress(192 ,168 ,42 ,2)
-// For a cloud MQTT broker, type the domain name
-//#define MQTT_HOST "example.com"
 #define MQTT_PORT 1883
 
 //  MQTT Topics
@@ -32,7 +29,7 @@ WiFiEventHandler wifiConnectHandler;
 WiFiEventHandler wifiDisconnectHandler;
 Ticker wifiReconnectTimer;
 
-unsigned long previousMillis = 0;   // Stores last time temperature was published
+unsigned long previousMillis = 0;   // Stores last time was published
 const long interval = 5000;        // Interval at which to publish sensor readings
 
 void connectToWifi() {
@@ -55,7 +52,7 @@ void connectToMqtt() {
   Serial.println("Connecting to MQTT...");
   mqttClient.connect();
 }
-
+// this function is never successful
 void onMqttConnect(bool sessionPresent) {
   Serial.println("Connected to MQTT.");
   Serial.print("Session present: ");
@@ -143,7 +140,7 @@ void loop() {
      }
 
 
-    // Publish an MQTT message on topic esp/bme280/temperature
+    // Publish an MQTT message on topic "esp/arduino1/sensor1" and "esp/arduino1/sensor2"
     uint16_t packetIdPub1 = mqttClient.publish(MQTT_PUB_S1, 1, true, String(s1).c_str());                            
     Serial.printf("Publishing on topic %s at QoS 1, packetId: %i ", MQTT_PUB_S1, packetIdPub1);
     Serial.printf("Message: %.2f \n", s1);
